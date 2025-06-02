@@ -1,26 +1,37 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* Brand CSS Variables */
 :root {
+  --color-primary: theme('colors.primary');
+  --color-secondary: theme('colors.secondary');
+  --color-tertiary: theme('colors.tertiary');
+  --color-cyan: theme('colors.cyan');
+  --color-mint: theme('colors.mint');
+  --background: theme('colors.surface');
+  --foreground: theme('colors.onSurface');
+}
+
+/* Light Mode Overrides */
+[data-theme='light'] {
   --background: #ffffff;
   --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Dark Mode Overrides */
+[data-theme='dark'] {
+  --background: theme('colors.surface');
+  --foreground: theme('colors.onSurface');
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Slow Gradient Animation */
+@keyframes slowGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.animate-slow-gradient {
+  background-size: 200% 200%;
+  animation: slowGradient 15s ease infinite;
 }

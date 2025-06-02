@@ -1,0 +1,83 @@
+// File: src/components/RealEstateFeatures.tsx
+'use client';
+
+import Image from 'next/image';
+
+const features = [
+  {
+    title: 'Aerial Drone Footage',
+    text: 'Showcase exteriors and surroundings with smooth, high-resolution drone shots for unmatched perspectives.',
+    media: { type: 'video', src: '/videos/feature-drone.mp4' },
+    reverse: false,
+  },
+  {
+    title: 'Cinematic Video Tours',
+    text: 'Engage viewers with dynamic walkthroughs and storytelling that bring listings to life on every device.',
+    media: { type: 'image', src: '/images/feature-video.jpeg' },
+    reverse: true,
+  },
+  {
+    title: 'Interactive 3D Walkthroughs',
+    text: 'Allow buyers to explore properties online with virtual tours that simulate an in-person visit.',
+    media: { type: 'image', src: '/images/feature-3d.jpg' },
+    reverse: false,
+  },
+  {
+    title: 'High-Impact Photography',
+    text: 'Capture every angle and detail with professional property photography that attracts clicks and creates desire.',
+    media: { type: 'image', src: '/images/feature-photo.jpg' },
+    reverse: true,
+  },
+];
+
+export default function FeatureSections() {
+  return (
+    <section id="features" className="py-24 space-y-24">
+      {features.map((f, i) => (
+        <div
+          key={i}
+          className={`
+            flex flex-col-reverse md:flex-row items-center
+            max-w-6xl mx-auto px-4 gap-8
+            ${f.reverse ? 'md:flex-row-reverse' : ''}
+          `}
+        >
+          {/* Text */}
+          <div className="md:w-1/3 space-y-4">
+            <h2
+              className="
+                text-4xl md:text-5xl font-bold
+                bg-clip-text text-transparent
+                bg-gradient-to-r from-primary to-secondary
+              "
+            >
+              {f.title}
+            </h2>
+            <p className="text-gray-300 text-lg leading-relaxed">{f.text}</p>
+          </div>
+
+          {/* Media (Image or Video) */}
+          <div className="md:w-2/3 h-[450px] relative rounded-2xl overflow-hidden shadow-2xl">
+            {f.media.type === 'image' ? (
+              <Image
+                src={f.media.src}
+                alt={f.title}
+                fill
+                className="object-cover"
+              />
+            ) : (
+              <video
+                src={f.media.src}
+                className="w-full h-full object-cover"
+                autoPlay
+                muted
+                loop
+                playsInline
+              />
+            )}
+          </div>
+        </div>
+      ))}
+    </section>
+  );
+}
