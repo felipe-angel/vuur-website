@@ -1,167 +1,213 @@
-// src/app/contact/page.tsx
-"use client";
+'use client';
 
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { useState } from "react";
-import { motion } from "framer-motion";
-
-const SERVICES = [
-  { id: 'website', label: 'Website Development' },
-  { id: 'social', label: 'Social Media Management' },
-  { id: 'realestate', label: 'Real Estate Marketing' },
-  { id: 'branding', label: 'Brand Strategy' }
-];
+import { useState, ChangeEvent, FormEvent } from 'react';
 
 export default function ContactPage() {
-  const [selected, setSelected] = useState<string[]>([]);
-  const [form, setForm] = useState({ firstName: '', lastName: '', email: '', phone: '' });
+  // 1) Local state for each input
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [services, setServices] = useState<string[]>([]);
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const toggleService = (id: string) => {
-    setSelected(sel =>
-      sel.includes(id) ? sel.filter(x => x !== id) : [...sel, id]
+  // 2) Handle checkbox toggles
+  const toggleService = (serviceName: string) => {
+    setServices((prev) =>
+      prev.includes(serviceName)
+        ? prev.filter((s) => s !== serviceName)
+        : [...prev, serviceName]
     );
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm(f => ({ ...f, [name]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  // 3) Main form submit
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: integrate with backend
-    console.log({ services: selected, ...form });
-    alert('Thank you! We will reach out shortly.');
+    setIsSubmitting(true);
+    setStatusMessage(null);
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstName, lastName, email, phone, services }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Unknown error');
+      }
+
+      setStatusMessage('Your message has been sent! We’ll be in touch soon.');
+      // Reset form fields
+      setFirstName('');
+      setLastName('');
+      setEmail('');
+      setPhone('');
+      setServices([]);
+    } catch (err: any) {
+      console.error('Submission error:', err);
+      setStatusMessage(
+        'Sorry, something went wrong. Please try again in a moment.'
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className="bg-surface text-onSurface min-h-screen">
-      <Header />
-
-      {/* Hero Banner */}
-      <section className="bg-gradient-to-r from-primary to-secondary py-24 px-4 text-center">
-        <motion.h1
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8 }}
-          className="text-4xl md:text-5xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary"
-        >
-          Let's Create Something Amazing
-        </motion.h1>
-        <motion.p
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.8 }}
-          className="max-w-2xl mx-auto text-lg md:text-xl text-surface"
-        >
-          Tell us more about your project and how VUUR can ignite your digital presence.
-        </motion.p>
-      </section>
-
-      <main className="-mt-12 pb-16 px-4">
-        {/* Page Title */}
-        <motion.h2
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.1, duration: 0.8 }}
-          className="text-center text-4xl md:text-5xl font-extrabold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary"
-        >
+    <div className="min-h-screen flex items-center justify-center bg-neutralBg py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full bg-gray-900 p-8 rounded-2xl shadow-lg">
+        <h2 className="text-center text-3xl font-extrabold text-lightText">
           Contact Us
-        </motion.h2>
+        </h2>
+        <p className="mt-2 text-center text-gray-400 text-sm">
+          Fill out the form and we’ll get back to you via email.
+        </p>
 
-        <section className="max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden">
-          <form onSubmit={handleSubmit} className="p-8 space-y-6">
-            {/* Services Selector */}
-            <fieldset className="space-y-4">
-              <legend className="text-2xl font-semibold text-surface">
-                I’m interested in:
-              </legend>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {SERVICES.map(s => (
-                  <label
-                    key={s.id}
-                    className="flex items-center space-x-3 p-3 border rounded-lg cursor-pointer hover:shadow-lg transition-shadow"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selected.includes(s.id)}
-                      onChange={() => toggleService(s.id)}
-                      className="w-5 h-5 text-primary focus:ring-primary"
-                    />
-                    <span className="text-surface font-medium">{s.label}</span>
-                  </label>
-                ))}
-              </div>
-            </fieldset>
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+          {/* First + Last Name */}
+          <div className="flex space-x-4">
+            <div className="w-1/2">
+              <label
+                htmlFor="first-name"
+                className="block text-sm font-medium text-gray-300"
+              >
+                First Name
+              </label>
+              <input
+                id="first-name"
+                name="firstName"
+                type="text"
+                required
+                value={firstName}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setFirstName(e.target.value)
+                }
+                className="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-lightText placeholder-gray-500 focus:outline-none focus:ring-primary focus:border-primary"
+              />
+            </div>
+            <div className="w-1/2">
+              <label
+                htmlFor="last-name"
+                className="block text-sm font-medium text-gray-300"
+              >
+                Last Name
+              </label>
+              <input
+                id="last-name"
+                name="lastName"
+                type="text"
+                value={lastName}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setLastName(e.target.value)
+                }
+                className="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-lightText placeholder-gray-500 focus:outline-none focus:ring-primary focus:border-primary"
+              />
+            </div>
+          </div>
 
-            {/* Name Fields */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {['firstName','lastName'].map(field => (
-                <div key={field}>
-                  <label htmlFor={field} className="block text-sm font-medium text-surface capitalize">
-                    {field === 'firstName' ? 'First Name' : 'Last Name'}
-                  </label>
+          {/* Email */}
+          <div>
+            <label
+              htmlFor="email-address"
+              className="block text-sm font-medium text-gray-300"
+            >
+              Email Address *
+            </label>
+            <input
+              id="email-address"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setEmail(e.target.value)
+              }
+              className="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-lightText placeholder-gray-500 focus:outline-none focus:ring-primary focus:border-primary"
+            />
+          </div>
+
+          {/* Phone */}
+          <div>
+            <label
+              htmlFor="phone-number"
+              className="block text-sm font-medium text-gray-300"
+            >
+              Phone Number
+            </label>
+            <input
+              id="phone-number"
+              name="phone"
+              type="tel"
+              value={phone}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setPhone(e.target.value)
+              }
+              className="mt-1 block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-lightText placeholder-gray-500 focus:outline-none focus:ring-primary focus:border-primary"
+            />
+          </div>
+
+          {/* Services Checkboxes */}
+          <fieldset className="mt-4">
+            <legend className="text-sm font-medium text-gray-300">
+              I’m interested in: (select all that apply)
+            </legend>
+            <div className="mt-2 space-y-2">
+              {['Website', 'Social', 'Real Estate', 'Branding'].map((svc) => (
+                <div key={svc} className="flex items-center">
                   <input
-                    id={field}
-                    name={field}
-                    type="text"
-                    required
-                    value={(form as any)[field]}
-                    onChange={handleChange}
-                    className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
+                    id={svc}
+                    name="services"
+                    type="checkbox"
+                    checked={services.includes(svc)}
+                    onChange={() => toggleService(svc)}
+                    className="h-4 w-4 text-primary focus:ring-primary border-gray-700 rounded"
                   />
+                  <label
+                    htmlFor={svc}
+                    className="ml-2 block text-sm text-gray-300"
+                  >
+                    {svc}
+                  </label>
                 </div>
               ))}
             </div>
+          </fieldset>
 
-            {/* Contact Fields */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-surface">
-                  Email Address
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  value={form.email}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
-                />
-              </div>
-              <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-surface">
-                  Phone Number
-                </label>
-                <input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  required
-                  value={form.phone}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
-                />
-              </div>
-            </div>
-
-            {/* Submit Button */}
-            <motion.button
+          {/* Submit Button */}
+          <div>
+            <button
               type="submit"
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
-              className="w-full py-4 mt-4 text-white text-lg font-semibold rounded-full bg-gradient-to-r from-primary to-secondary hover:opacity-95 transform hover:-translate-y-1 transition-all"
+              disabled={isSubmitting}
+              className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-full shadow-sm text-sm font-semibold 
+                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary 
+                ${
+                  isSubmitting
+                    ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-primary to-secondary text-black hover:from-secondary hover:to-primary'
+                }`}
             >
-              Send Message
-            </motion.button>
-          </form>
-        </section>
-      </main>
+              {isSubmitting ? 'Sending...' : 'Send Message'}
+            </button>
+          </div>
 
-      <Footer />
+          {/* Status Message */}
+          {statusMessage && (
+            <p
+              className={`mt-4 text-center text-sm ${
+                statusMessage.startsWith('Sorry')
+                  ? 'text-red-500'
+                  : 'text-green-400'
+              }`}
+            >
+              {statusMessage}
+            </p>
+          )}
+        </form>
+      </div>
     </div>
   );
 }

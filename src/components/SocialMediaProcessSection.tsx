@@ -5,7 +5,6 @@ import {
   motion,
   useScroll,
   useTransform,
-  useSpring,
   useInView,
 } from 'framer-motion';
 import Image from 'next/image';

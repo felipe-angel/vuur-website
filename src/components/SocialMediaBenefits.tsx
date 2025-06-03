@@ -1,7 +1,8 @@
 // File: src/components/SocialMediaBenefits.tsx
 'use client';
-import React, { useRef } from 'react';
+import React from 'react';
 import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
 import Image from 'next/image';
 
 const benefits = [
@@ -53,49 +54,59 @@ export default function SocialMediaBenefits() {
       </div>
 
       <div className="relative max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 px-4">
-        {benefits.map((b, i) => {
-          const ref = useRef(null);
-          const inView = useInView(ref, { once: true, margin: '-100px' });
-          return (
-            <motion.div
-              key={i}
-              ref={ref}
-              className="bg-gray-900/50 backdrop-blur-lg border border-gray-700 p-8 rounded-3xl flex flex-col items-center text-center hover:scale-105 transition-transform"
-              initial={{ scale: 0.9, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              viewport={{ once: true, margin: '-100px' }}
-              transition={{ type: 'spring', stiffness: 160, damping: 20, delay: i * 0.2 }}
-            >
-              <Image
-                src={b.img}
-                alt={b.title}
-                width={140}
-                height={140}
-                className="rounded-full shadow-lg mb-6"
-                priority={i === 0}
-              />
-              <motion.h3
-                initial={{ y: 20, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.3 + i * 0.2, duration: 0.5 }}
-                className="text-2xl font-bold text-white mb-4"
-              >
-                {b.title}
-              </motion.h3>
-              <motion.p
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.5 + i * 0.2, duration: 0.5 }}
-                className="text-gray-300 leading-relaxed"
-              >
-                {b.text}
-              </motion.p>
-            </motion.div>
-          );
-        })}
+        {benefits.map((benefit, i) => (
+          <BenefitCard key={i} benefit={benefit} index={i} />
+        ))}
       </div>
     </section>
+  );
+}
+
+interface Benefit {
+  title: string;
+  text: string;
+  img: string;
+}
+
+function BenefitCard({ benefit, index }: { benefit: Benefit; index: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: '-100px' });
+
+  return (
+    <motion.div
+      ref={ref}
+      className="bg-gray-900/50 backdrop-blur-lg border border-gray-700 p-8 rounded-3xl flex flex-col items-center text-center hover:scale-105 transition-transform"
+      initial={{ scale: 0.9, opacity: 0 }}
+      whileInView={{ scale: 1, opacity: 1 }}
+      viewport={{ once: true, margin: '-100px' }}
+      transition={{ type: 'spring', stiffness: 160, damping: 20, delay: index * 0.2 }}
+    >
+      <Image
+        src={benefit.img}
+        alt={benefit.title}
+        width={140}
+        height={140}
+        className="rounded-full shadow-lg mb-6"
+        priority={index === 0}
+      />
+      <motion.h3
+        initial={{ y: 20, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.3 + index * 0.2, duration: 0.5 }}
+        className="text-2xl font-bold text-white mb-4"
+      >
+        {benefit.title}
+      </motion.h3>
+      <motion.p
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.5 + index * 0.2, duration: 0.5 }}
+        className="text-gray-300 leading-relaxed"
+      >
+        {benefit.text}
+      </motion.p>
+    </motion.div>
   );
 }

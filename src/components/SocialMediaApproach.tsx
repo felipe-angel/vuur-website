@@ -1,8 +1,8 @@
-/* ------------ SocialMediaApproach.tsx ------------ */
 // File: src/components/SocialMediaApproach.tsx
 'use client';
-import React, { useRef } from 'react';
+import React from 'react';
 import { motion, useInView } from 'framer-motion';
+import { useRef } from 'react';
 
 const steps = [
   {
@@ -32,8 +32,8 @@ const steps = [
 ];
 
 export default function SocialMediaApproach() {
-    return (
-      <section className="bg-black py-32 px-4">
+  return (
+    <section className="bg-black py-32 px-4">
       <div className="max-w-4xl mx-auto text-center mb-12">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -54,36 +54,47 @@ export default function SocialMediaApproach() {
           From deep-dive audits to continuous optimization, our proven methodology drives real results.
         </motion.p>
       </div>
+
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-12">
-        {steps.map((step, i) => {
-          const ref = useRef<HTMLDivElement>(null);
-          const inView = useInView(ref, { once: false, margin: '-50px' });
-          return (
-            <motion.div
-              key={i}
-              ref={ref}
-              className="bg-gray-900/50 backdrop-blur-lg p-10 rounded-3xl border border-gray-700 shadow-lg"
-              initial={{ scale: 0.9, opacity: 0 }}
-              whileInView={{ scale: 1, opacity: 1 }}
-              whileHover={{ y: -10, scale: 1.05 }}
-              viewport={{ once: false, margin: '-100px' }}
-              transition={{ type: 'spring', stiffness: 200, damping: 25, delay: i * 0.15 }}
-            >
-              <div className="flex items-center justify-center mb-6">
-                <span className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-[#ff5400] to-[#6f3ff5] rounded-full text-white text-2xl">
-                  {step.icon}
-                </span>
-              </div>
-              <h3 className="text-2xl font-semibold text-white mb-4 text-center">
-                {step.title}
-              </h3>
-              <p className="text-gray-300 text-sm leading-relaxed text-center">
-                {step.description}
-              </p>
-            </motion.div>
-          );
-        })}
+        {steps.map((step, i) => (
+          <ApproachStep key={i} step={step} index={i} />
+        ))}
       </div>
     </section>
+  );
+}
+
+interface Step {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+function ApproachStep({ step, index }: { step: Step; index: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: false, margin: '-50px' });
+
+  return (
+    <motion.div
+      ref={ref}
+      className="bg-gray-900/50 backdrop-blur-lg p-10 rounded-3xl border border-gray-700 shadow-lg"
+      initial={{ scale: 0.9, opacity: 0 }}
+      whileInView={{ scale: 1, opacity: 1 }}
+      whileHover={{ y: -10, scale: 1.05 }}
+      viewport={{ once: false, margin: '-100px' }}
+      transition={{ type: 'spring', stiffness: 200, damping: 25, delay: index * 0.15 }}
+    >
+      <div className="flex items-center justify-center mb-6">
+        <span className="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-br from-[#ff5400] to-[#6f3ff5] rounded-full text-white text-2xl">
+          {step.icon}
+        </span>
+      </div>
+      <h3 className="text-2xl font-semibold text-white mb-4 text-center">
+        {step.title}
+      </h3>
+      <p className="text-gray-300 text-sm leading-relaxed text-center">
+        {step.description}
+      </p>
+    </motion.div>
   );
 }
