@@ -1,8 +1,7 @@
 // File: src/components/SocialMediaBenefits.tsx
 'use client';
 import React from 'react';
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 
 const benefits = [
@@ -69,12 +68,8 @@ interface Benefit {
 }
 
 function BenefitCard({ benefit, index }: { benefit: Benefit; index: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: '-100px' });
-
   return (
     <motion.div
-      ref={ref}
       className="bg-gray-900/50 backdrop-blur-lg border border-gray-700 p-8 rounded-3xl flex flex-col items-center text-center hover:scale-105 transition-transform"
       initial={{ scale: 0.9, opacity: 0 }}
       whileInView={{ scale: 1, opacity: 1 }}

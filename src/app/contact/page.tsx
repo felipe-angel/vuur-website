@@ -3,7 +3,6 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
 
 export default function ContactPage() {
-  // 1) Local state for each input
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -12,7 +11,6 @@ export default function ContactPage() {
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 2) Handle checkbox toggles
   const toggleService = (serviceName: string) => {
     setServices((prev) =>
       prev.includes(serviceName)
@@ -21,7 +19,6 @@ export default function ContactPage() {
     );
   };
 
-  // 3) Main form submit
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -40,13 +37,12 @@ export default function ContactPage() {
       }
 
       setStatusMessage('Your message has been sent! We’ll be in touch soon.');
-      // Reset form fields
       setFirstName('');
       setLastName('');
       setEmail('');
       setPhone('');
       setServices([]);
-    } catch (err: any) {
+    } catch (err) {
       console.error('Submission error:', err);
       setStatusMessage(
         'Sorry, something went wrong. Please try again in a moment.'
@@ -67,7 +63,7 @@ export default function ContactPage() {
         </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-          {/* First + Last Name */}
+          {/* Name Fields */}
           <div className="flex space-x-4">
             <div className="w-1/2">
               <label

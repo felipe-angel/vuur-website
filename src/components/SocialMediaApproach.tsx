@@ -1,8 +1,7 @@
 // File: src/components/SocialMediaApproach.tsx
 'use client';
 import React from 'react';
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
+import { motion } from 'framer-motion';
 
 const steps = [
   {
@@ -64,24 +63,20 @@ export default function SocialMediaApproach() {
   );
 }
 
-interface Step {
+interface StepData {
   icon: string;
   title: string;
   description: string;
 }
 
-function ApproachStep({ step, index }: { step: Step; index: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: false, margin: '-50px' });
-
+function ApproachStep({ step, index }: { step: StepData; index: number }) {
   return (
     <motion.div
-      ref={ref}
       className="bg-gray-900/50 backdrop-blur-lg p-10 rounded-3xl border border-gray-700 shadow-lg"
       initial={{ scale: 0.9, opacity: 0 }}
       whileInView={{ scale: 1, opacity: 1 }}
-      whileHover={{ y: -10, scale: 1.05 }}
       viewport={{ once: false, margin: '-100px' }}
+      whileHover={{ y: -10, scale: 1.05 }}
       transition={{ type: 'spring', stiffness: 200, damping: 25, delay: index * 0.15 }}
     >
       <div className="flex items-center justify-center mb-6">
