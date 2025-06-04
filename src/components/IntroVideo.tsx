@@ -12,7 +12,7 @@ export default function IntroVideo() {
   return (
     <section ref={introRef} className="relative h-[75vh] flex items-center justify-center overflow-hidden bg-black">
       <motion.video
-        src="/videos/Our-Services.mp4"
+        src="https://firebasestorage.googleapis.com/v0/b/vuursocial-media-9aed0.firebasestorage.app/o/Our-Services.mp4?alt=media&token=0cd2ab2a-ef5b-467c-b84b-08aeeb4f16cc"
         autoPlay muted loop playsInline
         style={{ y: introY, opacity: introOpacity }}
         transition={{ type: 'spring', stiffness: 60, damping: 25 }}

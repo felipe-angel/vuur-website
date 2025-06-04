@@ -7,7 +7,7 @@ const features = [
   {
     title: 'Aerial Drone Footage',
     text: 'Showcase exteriors and surroundings with smooth, high-resolution drone shots for unmatched perspectives.',
-    media: { type: 'video', src: '/videos/feature-drone.mp4' },
+    media: { type: 'video', src: 'https://firebasestorage.googleapis.com/v0/b/vuursocial-media-9aed0.firebasestorage.app/o/feature-drone.mp4?alt=media&token=bf3ab643-8a6a-495b-b417-ec25336f9e36' },
     reverse: false,
   },
   {

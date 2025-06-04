@@ -28,7 +28,7 @@ export default function Hero() {
   return (
     <section className="flex flex-col items-center text-center px-4 text-white bg-black pb-8 overflow-visible">
       <motion.video
-        src="/videos/hero-loop.mp4"
+        src="https://firebasestorage.googleapis.com/v0/b/vuursocial-media-9aed0.firebasestorage.app/o/hero-loop.mp4?alt=media&token=bd36f28d-2186-4060-91d9-0aa7ed5ac04e"
         autoPlay
         muted
         loop
