@@ -16,19 +16,28 @@ const features = [
   {
     title: 'Cinematic Video Tours',
     text: 'Engage viewers with dynamic walkthroughs and storytelling that bring listings to life on every device.',
-    media: { type: 'image', src: '/images/feature-video.jpeg' },
+    media: {
+      type: 'image',
+      src: '/images/feature-video.jpeg',
+    },
     reverse: true,
   },
   {
     title: 'Interactive 3D Walkthroughs',
     text: 'Allow buyers to explore properties online with virtual tours that simulate an in-person visit.',
-    media: { type: 'image', src: '/images/feature-3d.jpg' },
+    media: {
+      type: 'image',
+      src: '/images/feature-3d.jpg',
+    },
     reverse: false,
   },
   {
     title: 'High-Impact Photography',
     text: 'Capture every angle and detail with professional property photography that attracts clicks and creates desire.',
-    media: { type: 'image', src: '/images/feature-photo.jpg' },
+    media: {
+      type: 'image',
+      src: '/images/feature-photo.jpg',
+    },
     reverse: true,
   },
 ];
@@ -46,13 +55,13 @@ export default function FeatureSections() {
           `}
         >
           {/* Text */}
-          <div className="md:w-1/3 space-y-4 overflow-visible">
+          <div className="md:w-1/3 space-y-4">
             <h2
               className="
                 text-4xl md:text-5xl font-bold
                 bg-clip-text text-transparent
                 bg-gradient-to-r from-primary to-secondary
-                leading-[1.15] pb-[0.15em] overflow-visible
+                leading-[1.15] pb-[0.15em]
               "
             >
               {f.title}
@@ -61,22 +70,24 @@ export default function FeatureSections() {
           </div>
 
           {/* Media (Image or Video) */}
-          <div className="md:w-2/3 h-[450px] relative rounded-2xl overflow-hidden shadow-2xl">
+          <div className="md:w-2/3 w-full h-[450px] relative rounded-2xl overflow-hidden shadow-2xl">
             {f.media.type === 'image' ? (
               <Image
                 src={f.media.src}
                 alt={f.title}
                 fill
                 className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
               />
             ) : (
               <video
                 src={f.media.src}
-                className="w-full h-full object-cover"
+                className="absolute inset-0 w-full h-full object-cover"
                 autoPlay
                 muted
                 loop
                 playsInline
+                preload="auto"
               />
             )}
           </div>
