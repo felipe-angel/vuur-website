@@ -7,7 +7,10 @@ const features = [
   {
     title: 'Aerial Drone Footage',
     text: 'Showcase exteriors and surroundings with smooth, high-resolution drone shots for unmatched perspectives.',
-    media: { type: 'video', src: 'https://firebasestorage.googleapis.com/v0/b/vuursocial-media-9aed0.firebasestorage.app/o/feature-drone.mp4?alt=media&token=bf3ab643-8a6a-495b-b417-ec25336f9e36' },
+    media: {
+      type: 'video',
+      src: 'https://firebasestorage.googleapis.com/v0/b/vuursocial-media-9aed0.firebasestorage.app/o/feature-drone.mp4?alt=media&token=bf3ab643-8a6a-495b-b417-ec25336f9e36',
+    },
     reverse: false,
   },
   {
@@ -32,7 +35,7 @@ const features = [
 
 export default function FeatureSections() {
   return (
-    <section id="features" className="py-24 space-y-24">
+    <section id="features" className="py-24 space-y-24 overflow-visible">
       {features.map((f, i) => (
         <div
           key={i}
@@ -43,12 +46,13 @@ export default function FeatureSections() {
           `}
         >
           {/* Text */}
-          <div className="md:w-1/3 space-y-4">
+          <div className="md:w-1/3 space-y-4 overflow-visible">
             <h2
               className="
                 text-4xl md:text-5xl font-bold
                 bg-clip-text text-transparent
                 bg-gradient-to-r from-primary to-secondary
+                leading-[1.15] pb-[0.15em] overflow-visible
               "
             >
               {f.title}
